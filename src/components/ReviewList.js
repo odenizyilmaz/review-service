@@ -2,18 +2,30 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
+const mockServerUrl = 'https://a3e4ce0a-612d-4e4f-b007-79236bad33f9.mock.pstmn.io';  // Replace with your actual Postman mock server URL
+
 function ReviewList() {
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
-    axios.get('/https://c987b0d3-c1fa-4e80-a632-6bb3fea5365b.mock.pstmn.io')
+    axios.get(`${mockServerUrl}/reviews`)
       .then(response => {
-        setReviews(response.data);
+        setReviews(response.data.reviews);
       })
       .catch(error => {
         console.error('There was an error fetching the reviews!', error);
       });
   }, []);
+
+  const handleDelete = (reviewId) => {
+    axios.delete(`${mockServerUrl}/reviews/${reviewId}`)
+      .then(() => {
+        setReviews(reviews.filter(review => review.reviewId !== reviewId));
+      })
+      .catch(error => {
+        console.error('There was an error deleting the review!', error);
+      });
+  };
 
   return (
     <div>
@@ -21,25 +33,14 @@ function ReviewList() {
       <Link to="/add">Add Review</Link>
       <ul>
         {reviews.map(review => (
-          <li key={review.id}>
+          <li key={review.reviewId}>
             {review.comment} - {review.rating} stars
-            <Link to={`/edit/${review.id}`}>Edit</Link>
-            <button onClick={() => handleDelete(review.id)}>Delete</button>
+            <button onClick={() => handleDelete(review.reviewId)}>Delete</button>
           </li>
         ))}
       </ul>
     </div>
   );
-
-  function handleDelete(id) {
-    axios.delete(`https://c987b0d3-c1fa-4e80-a632-6bb3fea5365b.mock.pstmn.io/${id}`)
-      .then(() => {
-        setReviews(reviews.filter(review => review.id !== id));
-      })
-      .catch(error => {
-        console.error('There was an error deleting the review!', error);
-      });
-  }
 }
 
 export default ReviewList;

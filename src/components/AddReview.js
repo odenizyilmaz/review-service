@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+const mockServerUrl = 'https://a3e4ce0a-612d-4e4f-b007-79236bad33f9.mock.pstmn.io';  // Replace with your actual Postman mock server URL
+
 function AddReview() {
   const [product_id, setProductId] = useState('');
   const [user_id, setUserId] = useState('');
@@ -11,7 +13,7 @@ function AddReview() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post('https://c987b0d3-c1fa-4e80-a632-6bb3fea5365b.mock.pstmn.io', { product_id, user_id, rating, comment })
+    axios.post(`${mockServerUrl}/reviews`, { product_id, user_id, rating, comment })
       .then(() => {
         navigate('/');
       })
